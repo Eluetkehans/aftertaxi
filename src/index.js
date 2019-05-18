@@ -1,8 +1,8 @@
 const express = require('express')
 const bodyParser = require('body-parser')
+const router = require("./api/router")
 const app = express()
 
-import { router } from "./api/router"
 
 // cours and metrics can be added here
 
@@ -14,7 +14,7 @@ app.get("/healthCheck", (req, res) => res.status(200).send({"status": "up"}))
 app.use("/afterTaxi", router) // only expose these routes to the outside
 
 
-const server = app.listen(port, () => console.log("server is up")) // don't log port. It is a security vulnerability
+const server = app.listen(3000, () => console.log("server is up")) // don't log port. It is a security vulnerability
 
 const connections = []
 
