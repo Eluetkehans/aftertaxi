@@ -3,6 +3,6 @@ const { thing } = require("./client")
 
 const router = Router()
 
-router.get("/initial", () => console.log("hit"))
-thing()
+router.post("/getPrices", (req, res) => console.log(req.body))
+
 module.exports = router

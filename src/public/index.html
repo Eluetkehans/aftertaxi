@@ -7,15 +7,19 @@
   <meta name="robots" content="noindex" />
   <meta charset="utf-8" />
   <title>AfterTaxi</title>
-  <script type="text/javascript" src="index.js"></script>
+  <script async src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
 <body>
   <h1>After Taxi!</h1>
   <main>
-    <label for="start">where are you?</label>
-    <input type="text" name="start" />
-    <label for="end">where do you want to go?</label>
-    <input type="text" name="end" />
+    <form id="address-form">
+      <label for="start">where are you?</label>
+      <input type="text" name="start" id="start" />
+      <label for="end">where do you want to go?</label>
+      <input type="text" name="end" id="end"/>
+      <button type="submit">Go!</button>
+    </form>
   </main>
+  <script type="text/javascript" src="index.js"></script>
 </body>
 </html>
