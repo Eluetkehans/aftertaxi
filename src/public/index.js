@@ -7,7 +7,20 @@ const submitCallback = (event) => {
   const endAddress = document.getElementById('end').value
   console.log(startAddress, endAddress)
   axios.post('http://localhost:3000/afterTaxi/getPrices', {startAddress, endAddress})
-    .then((res) => console.log(res))
+    .then((res) => {
+      const { lyftPrice, lyftPlusPrice} = req.body;
+      const resultsContainer = document.getElementById("results")
+      
+      const lyftSpan = document.createElement('span');
+      lyftSpan.innerHTML = `After Lyft: ${lyftPrice}`;
+
+      const lyftPlusSpan = document.createElement('span');
+      lyftPlusSpan.innerHTML = `After Lyft Plus: ${lyftPlusPrice}`;
+
+      resultsContainer.appendChild(lyftSpan)
+      resultsContainer.appendChild(lyftPlusSpan)
+
+    })
     .catch((err) => console.error(err))
 }
 
