@@ -1,25 +1,28 @@
 
 const addressForm = document.getElementById('address-form');
 
+const formatter = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+});
+
 const submitCallback = (event) => {
   event.preventDefault()
   const startAddress = document.getElementById('start').value
   const endAddress = document.getElementById('end').value
-  console.log(startAddress, endAddress)
+
   axios.post('http://localhost:3000/afterTaxi/getPrices', {startAddress, endAddress})
     .then((res) => {
-      const { lyftPrice, lyftPlusPrice} = req.body;
       const resultsContainer = document.getElementById("results")
-      
-      const lyftSpan = document.createElement('span');
-      lyftSpan.innerHTML = `After Lyft: ${lyftPrice}`;
 
-      const lyftPlusSpan = document.createElement('span');
-      lyftPlusSpan.innerHTML = `After Lyft Plus: ${lyftPlusPrice}`;
-
-      resultsContainer.appendChild(lyftSpan)
-      resultsContainer.appendChild(lyftPlusSpan)
-
+      res.data.forEach(({serviceName, costMin, costMax}) => {
+        
+        const span = document.createElement('span');
+        span.innerHTML = `After ${serviceName}: ${formatter.format(costMin / 100)} - ${formatter.format(costMax / 100)}`;
+    
+        resultsContainer.appendChild(span)
+        resultsContainer.appendChild(document.createElement('br'))
+      })
     })
     .catch((err) => console.error(err))
 }

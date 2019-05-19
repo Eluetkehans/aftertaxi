@@ -29,7 +29,7 @@ function applyDiscount(originalPrice, discountPercentage) {
 
 }
 
-const getLyftPrices = new Promise((startAddress, endAddress) => {
+const getLyftPrices = (startAddress, endAddress) => {
   // use a geo indexing library to get the actuall lat long's from the addresses here
   let pickupLatitude = 37.76472;
   let pickupLongitude = -122.422999;
@@ -37,19 +37,28 @@ const getLyftPrices = new Promise((startAddress, endAddress) => {
   let destinationLongitude = -122.4242038;
 
   // It looks like the docs page is down for the lyft rest api. This is just a redirect link to there own website. I'll send a screen shot via email of the docs page
-  return axios.get(`https://lyft.com/ride?id=lyft&pickup[latitude]=${pickupLatitude}&pickup[longitude]=${pickupLongitude}&destination[latitude]=${destinationLatitude}&destination[longitude]=${destinationLongitude}&partner=${process.env.CLIENT_ID}`, {headers: {
-    Authorization: authHeader
-  }})
+  return axios.get(
+    `https://api.lyft.com/v1/cost?start_lat=${pickupLatitude}&start_lng=${pickupLongitude}&end_lat=${destinationLatitude}&end_lng=${destinationLongitude}&`,
+    {
+      headers: {
+        Authorization: authHeader
+      }
+    }
+  )
     .then((res) => {
       // validate body here
-
-      // just guessing on the property names here. Docs are down
-      const lyftPrice = applyDiscount(res.body.lyftPrice, .25)
-      const lyftPlusPrice = applyDiscount(res.body.lyftPlusPrice, .25)
-      return {lyftPrice, lyftPlusPrice}
+      return res.data.cost_estimates.map(({
+        display_name,
+        estimated_cost_cents_min,
+        estimated_cost_cents_max
+      }) => ({
+        serviceName: display_name,
+        costMin: applyDiscount(estimated_cost_cents_min, .25),
+        costMax: applyDiscount(estimated_cost_cents_max, .25)
+      }))
     })
     .catch((err) => {throw err})
-})
+}
 
 
 
